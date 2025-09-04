@@ -27,10 +27,10 @@ class CartManager extends ConnectorFacade
     /**
      * @inheritdoc
      */
-    public function saveCart(Cart $cart)
+    public function saveCart(string $clientHash, Cart $cart)
     {
         try {
-            $this->connector->set(session_id(), $cart);
+            $this->connector->set($clientHash, $cart);
         } catch (Exception $e) {
             $this->logger->error('Error');
         }
@@ -39,14 +39,14 @@ class CartManager extends ConnectorFacade
     /**
      * @return ?Cart
      */
-    public function getCart()
+    public function getCart(string $clientHash)
     {
         try {
-            return $this->connector->get(session_id());
+            return $this->connector->get($clientHash);
         } catch (Exception $e) {
             $this->logger->error('Error');
         }
 
-        return new Cart(session_id(), []);
+        return new Cart($clientHash, []);
     }
 }
