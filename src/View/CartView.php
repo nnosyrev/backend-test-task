@@ -27,7 +27,6 @@ readonly class CartView
                 ]),
                 'email' => $cart->getCustomer()->getEmail(),
             ],
-            'payment_method' => $cart->getPaymentMethod(),
         ];
 
         $total = 0;
