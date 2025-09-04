@@ -10,7 +10,7 @@ use Raketa\BackendTestTask\Repository\ProductRepository;
 use Raketa\BackendTestTask\View\CartView;
 use Ramsey\Uuid\Uuid;
 
-readonly class AddToCartController
+readonly class CartController
 {
     public function __construct(
         private ProductRepository $productRepository,
@@ -19,7 +19,37 @@ readonly class AddToCartController
     ) {
     }
 
-    public function get(RequestInterface $request): ResponseInterface
+    public function сart(RequestInterface $request): ResponseInterface
+    {
+        $response = new JsonResponse();
+        $cart = $this->cartManager->getCart();
+
+        if (! $cart) {
+            $response->getBody()->write(
+                json_encode(
+                    ['message' => 'Cart not found'],
+                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                )
+            );
+
+            return $response
+                ->withHeader('Content-Type', 'application/json; charset=utf-8')
+                ->withStatus(404);
+        } else {
+            $response->getBody()->write(
+                json_encode(
+                    $this->cartView->toArray($cart),
+                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                )
+            );
+        }
+
+        return $response
+            ->withHeader('Content-Type', 'application/json; charset=utf-8')
+            ->withStatus(404);
+    }
+
+    public function update(RequestInterface $request): ResponseInterface
     {
         $rawRequest = json_decode($request->getBody()->getContents(), true);
         $product = $this->productRepository->getByUuid($rawRequest['productUuid']);
