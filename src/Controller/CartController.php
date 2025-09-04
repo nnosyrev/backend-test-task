@@ -2,13 +2,13 @@
 
 namespace Raketa\BackendTestTask\Controller;
 
-use Psr\Http\Message\RequestInterface;
 use Raketa\BackendTestTask\Domain\Cart;
 use Raketa\BackendTestTask\Domain\CartItem;
 use Raketa\BackendTestTask\Service\CartManager;
 use Raketa\BackendTestTask\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 readonly class CartController
 {
@@ -32,12 +32,12 @@ readonly class CartController
         return JsonResponse::fromJsonString($json, 200);
     }
 
-    public function update(RequestInterface $request, string $clientHash): JsonResponse
+    public function update(Request $request, string $clientHash): JsonResponse
     {
-        $rawRequest = json_decode($request->getBody()->getContents(), true);
+        $productUuid = $request->request->get('productUuid');
+        $quantity = $request->request->get('quantity');
 
-        $product = $this->productRepository->findOneByUuidOrFail($rawRequest['productUuid']);
-        $quantity = $rawRequest['quantity'];
+        $product = $this->productRepository->findOneByUuidOrFail($productUuid);
 
         $cart = $this->cartManager->getCart($clientHash);
         if (!$cart) {
