@@ -4,11 +4,16 @@ declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Entity;
 
+use Symfony\Component\Serializer\Attribute\Ignore;
+
 class Product
 {
+    #[Ignore]
     private int $id;
     private string $uuid;
+    #[Ignore]
     private bool $isActive;
+    #[Ignore]
     private Category $category;
     private string $name;
     private string $description;

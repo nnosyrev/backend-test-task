@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Domain;
+
 use Ramsey\Uuid\Uuid;
 
 final class Cart
