@@ -43,6 +43,8 @@ readonly class CartController
             $rawRequest['quantity'],
         ));
 
+        $this->cartManager->saveCart($clientHash, $cart);
+
         $data = [
             'status' => 'success',
             'cart' => $this->cartView->toArray($cart)
