@@ -8,7 +8,6 @@ use Raketa\BackendTestTask\Domain\CartItem;
 use Raketa\BackendTestTask\Service\CartManager;
 use Raketa\BackendTestTask\Repository\ProductRepository;
 use Raketa\BackendTestTask\View\CartView;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 readonly class CartController
@@ -25,7 +24,7 @@ readonly class CartController
         $cart = $this->cartManager->getCart($clientHash);
 
         if (!$cart) {
-            $cart = new Cart(Uuid::uuid4()->toString(), []);
+            $cart = Cart::createEmpty();
         }
 
         return new JsonResponse($this->cartView->toArray($cart), 200);
@@ -40,7 +39,7 @@ readonly class CartController
 
         $cart = $this->cartManager->getCart($clientHash);
         if (!$cart) {
-            $cart = new Cart(Uuid::uuid4()->toString(), []);
+            $cart = Cart::createEmpty();
         }
 
         $cart->addItem(
