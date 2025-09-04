@@ -30,7 +30,7 @@ class CartManager extends ConnectorFacade
     public function saveCart(Cart $cart)
     {
         try {
-            $this->connector->set($cart, session_id());
+            $this->connector->set(session_id(), $cart);
         } catch (Exception $e) {
             $this->logger->error('Error');
         }
