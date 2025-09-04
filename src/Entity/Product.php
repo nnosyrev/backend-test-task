@@ -9,7 +9,7 @@ class Product
     private int $id;
     private string $uuid;
     private bool $isActive;
-    private string $category;
+    private Category $category;
     private string $name;
     private string $description;
     private string $thumbnail;
@@ -44,12 +44,12 @@ class Product
         return $this;
     }
 
-    public function getCategory(): string
+    public function getCategory(): Category
     {
         return $this->category;
     }
 
-    public function setCategory(string $category): static
+    public function setCategory(Category $category): static
     {
         $this->category = $category;
 

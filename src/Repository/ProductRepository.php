@@ -7,6 +7,7 @@ namespace Raketa\BackendTestTask\Repository;
 use Raketa\BackendTestTask\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Raketa\BackendTestTask\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductRepository extends ServiceEntityRepository
@@ -27,7 +28,7 @@ class ProductRepository extends ServiceEntityRepository
         return $product;
     }
 
-    public function findByCategory(string $category): array
+    public function findByCategory(Category $category): array
     {
         $entityManager = $this->getEntityManager();
 
