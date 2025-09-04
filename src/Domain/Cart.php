@@ -8,7 +8,6 @@ final class Cart
 {
     public function __construct(
         readonly private string $uuid,
-        readonly private Customer $customer,
         private array $items,
     ) {
     }
@@ -16,11 +15,6 @@ final class Cart
     public function getUuid(): string
     {
         return $this->uuid;
-    }
-
-    public function getCustomer(): Customer
-    {
-        return $this->customer;
     }
 
     public function getItems(): array

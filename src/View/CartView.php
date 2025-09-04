@@ -18,15 +18,6 @@ readonly class CartView
     {
         $data = [
             'uuid' => $cart->getUuid(),
-            'customer' => [
-                'id' => $cart->getCustomer()->getId(),
-                'name' => implode(' ', [
-                    $cart->getCustomer()->getLastName(),
-                    $cart->getCustomer()->getFirstName(),
-                    $cart->getCustomer()->getMiddleName(),
-                ]),
-                'email' => $cart->getCustomer()->getEmail(),
-            ],
         ];
 
         $total = 0;
