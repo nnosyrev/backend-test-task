@@ -3,6 +3,7 @@
 namespace Raketa\BackendTestTask\Controller;
 
 use Psr\Http\Message\RequestInterface;
+use Raketa\BackendTestTask\Domain\Cart;
 use Raketa\BackendTestTask\Domain\CartItem;
 use Raketa\BackendTestTask\Service\CartManager;
 use Raketa\BackendTestTask\Repository\ProductRepository;
@@ -24,7 +25,7 @@ readonly class CartController
         $cart = $this->cartManager->getCart($clientHash);
 
         if (!$cart) {
-            return new JsonResponse(['message' => 'Cart not found'], 404);
+            $cart = new Cart(Uuid::uuid4()->toString(), []);
         }
 
         return new JsonResponse($this->cartView->toArray($cart), 200);

@@ -42,12 +42,6 @@ class CartManager extends ConnectorFacade
      */
     public function getCart(string $clientHash)
     {
-        try {
-            return $this->connector->get($clientHash);
-        } catch (Exception $e) {
-            $this->logger->error('Error');
-        }
-
-        return new Cart(Uuid::uuid4()->toString(), []);
+        return $this->connector->get($clientHash);
     }
 }

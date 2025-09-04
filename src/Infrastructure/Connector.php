@@ -23,10 +23,16 @@ class Connector
     public function get(string $key)
     {
         try {
-            return unserialize($this->redis->get($key));
+            $value = $this->redis->get($key);
         } catch (RedisException $e) {
             throw new ConnectorException('Connector error', $e->getCode(), $e);
         }
+
+        if (false === $value) {
+            return null;
+        }
+
+        return unserialize($value);
     }
 
     /**
