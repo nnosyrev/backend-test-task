@@ -34,15 +34,18 @@ readonly class CartController
     public function update(RequestInterface $request, string $clientHash): JsonResponse
     {
         $rawRequest = json_decode($request->getBody()->getContents(), true);
+
         $product = $this->productRepository->findOneByUuidOrFail($rawRequest['productUuid']);
+        $quantity = $rawRequest['quantity'];
 
         $cart = $this->cartManager->getCart($clientHash);
-        $cart->addItem(new CartItem(
-            Uuid::uuid4()->toString(),
-            $product->getUuid(),
-            $product->getPrice(),
-            $rawRequest['quantity'],
-        ));
+        if (!$cart) {
+            $cart = new Cart(Uuid::uuid4()->toString(), []);
+        }
+
+        $cart->addItem(
+            new CartItem($product->getUuid(), $quantity)
+        );
 
         $this->cartManager->saveCart($clientHash, $cart);
 
