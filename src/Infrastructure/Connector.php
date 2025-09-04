@@ -6,7 +6,6 @@ namespace Raketa\BackendTestTask\Infrastructure;
 
 use Raketa\BackendTestTask\Domain\Cart;
 use Redis;
-use RedisException;
 
 class Connector
 {
@@ -17,16 +16,9 @@ class Connector
         return $this->redis = $redis;
     }
 
-    /**
-     * @throws ConnectorException
-     */
     public function get(string $key)
     {
-        try {
-            $value = $this->redis->get($key);
-        } catch (RedisException $e) {
-            throw new ConnectorException('Connector error', $e->getCode(), $e);
-        }
+        $value = $this->redis->get($key);
 
         if (false === $value) {
             return null;
@@ -35,16 +27,9 @@ class Connector
         return unserialize($value);
     }
 
-    /**
-     * @throws ConnectorException
-     */
     public function set(string $key, Cart $value)
     {
-        try {
-            $this->redis->setex($key, 24 * 60 * 60, serialize($value));
-        } catch (RedisException $e) {
-            throw new ConnectorException('Connector error', $e->getCode(), $e);
-        }
+        $this->redis->setex($key, 24 * 60 * 60, serialize($value));
     }
 
     public function has(string $key): bool
