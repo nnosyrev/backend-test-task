@@ -4,8 +4,8 @@ declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Controller;
 
-use Psr\Http\Message\ResponseInterface;
 use Raketa\BackendTestTask\View\ProductsView;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 readonly class ProductController
 {
@@ -14,18 +14,8 @@ readonly class ProductController
     ) {
     }
 
-    public function products(string $category): ResponseInterface
+    public function products(string $category): JsonResponse
     {
-        $response = new JsonResponse();
-        $response->getBody()->write(
-            json_encode(
-                $this->productsVew->toArray($category),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-            )
-        );
-
-        return $response
-            ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withStatus(200);
+        return new JsonResponse($this->productsVew->toArray($category), 200);
     }
 }

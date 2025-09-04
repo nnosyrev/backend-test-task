@@ -3,12 +3,12 @@
 namespace Raketa\BackendTestTask\Controller;
 
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\ResponseInterface;
 use Raketa\BackendTestTask\Domain\CartItem;
 use Raketa\BackendTestTask\Repository\CartManager;
 use Raketa\BackendTestTask\Repository\ProductRepository;
 use Raketa\BackendTestTask\View\CartView;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 readonly class CartController
 {
@@ -19,37 +19,18 @@ readonly class CartController
     ) {
     }
 
-    public function сart(RequestInterface $request): ResponseInterface
+    public function сart(): JsonResponse
     {
-        $response = new JsonResponse();
         $cart = $this->cartManager->getCart();
 
-        if (! $cart) {
-            $response->getBody()->write(
-                json_encode(
-                    ['message' => 'Cart not found'],
-                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-                )
-            );
-
-            return $response
-                ->withHeader('Content-Type', 'application/json; charset=utf-8')
-                ->withStatus(404);
-        } else {
-            $response->getBody()->write(
-                json_encode(
-                    $this->cartView->toArray($cart),
-                    JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-                )
-            );
+        if (!$cart) {
+            return new JsonResponse(['message' => 'Cart not found'], 404);
         }
 
-        return $response
-            ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withStatus(404);
+        return new JsonResponse($this->cartView->toArray($cart), 200);
     }
 
-    public function update(RequestInterface $request): ResponseInterface
+    public function update(RequestInterface $request): JsonResponse
     {
         $rawRequest = json_decode($request->getBody()->getContents(), true);
         $product = $this->productRepository->getByUuid($rawRequest['productUuid']);
@@ -62,19 +43,11 @@ readonly class CartController
             $rawRequest['quantity'],
         ));
 
-        $response = new JsonResponse();
-        $response->getBody()->write(
-            json_encode(
-                [
-                    'status' => 'success',
-                    'cart' => $this->cartView->toArray($cart)
-                ],
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-            )
-        );
+        $data = [
+            'status' => 'success',
+            'cart' => $this->cartView->toArray($cart)
+        ];
 
-        return $response
-            ->withHeader('Content-Type', 'application/json; charset=utf-8')
-            ->withStatus(200);
+        return new JsonResponse($data, 200);
     }
 }
