@@ -13,7 +13,7 @@ class Product
     private string $name;
     private string $description;
     private string $thumbnail;
-    private float $price;
+    private string $price;
 
     public function getId(): ?int
     {
@@ -92,12 +92,12 @@ class Product
         return $this;
     }
 
-    public function getPrice(): float
+    public function getPrice(): string
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): static
+    public function setPrice(string $price): static
     {
         $this->price = $price;
 
