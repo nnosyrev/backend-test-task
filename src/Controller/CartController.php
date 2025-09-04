@@ -7,15 +7,15 @@ use Raketa\BackendTestTask\Domain\Cart;
 use Raketa\BackendTestTask\Domain\CartItem;
 use Raketa\BackendTestTask\Service\CartManager;
 use Raketa\BackendTestTask\Repository\ProductRepository;
-use Raketa\BackendTestTask\View\CartView;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 
 readonly class CartController
 {
     public function __construct(
         private ProductRepository $productRepository,
-        private CartView $cartView,
         private CartManager $cartManager,
+        private SerializerInterface $serializer
     ) {
     }
 
@@ -27,7 +27,9 @@ readonly class CartController
             $cart = Cart::createEmpty();
         }
 
-        return new JsonResponse($this->cartView->toArray($cart), 200);
+        $json = $this->serializer->serialize($cart, 'json');
+
+        return JsonResponse::fromJsonString($json, 200);
     }
 
     public function update(RequestInterface $request, string $clientHash): JsonResponse
@@ -48,11 +50,8 @@ readonly class CartController
 
         $this->cartManager->saveCart($clientHash, $cart);
 
-        $data = [
-            'status' => 'success',
-            'cart' => $this->cartView->toArray($cart)
-        ];
+        $json = $this->serializer->serialize($cart, 'json');
 
-        return new JsonResponse($data, 200);
+        return JsonResponse::fromJsonString($json, 200);
     }
 }

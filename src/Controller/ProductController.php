@@ -5,15 +5,15 @@ declare(strict_types = 1);
 namespace Raketa\BackendTestTask\Controller;
 
 use Raketa\BackendTestTask\Entity\Category;
-use Raketa\BackendTestTask\View\ProductsView;
 use Raketa\BackendTestTask\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\SerializerInterface;
 
 readonly class ProductController
 {
     public function __construct(
-        private ProductsView $productsVew,
-        private ProductRepository $productRepository
+        private ProductRepository $productRepository,
+        private SerializerInterface $serializer
     ) {
     }
 
@@ -21,6 +21,8 @@ readonly class ProductController
     {
         $products = $this->productRepository->findByCategory($category);
 
-        return new JsonResponse($this->productsVew->toArray($products), 200);
+        $json = $this->serializer->serialize($products, 'json');
+
+        return JsonResponse::fromJsonString($json, 200);
     }
 }
