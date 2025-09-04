@@ -8,6 +8,7 @@ use Exception;
 use Psr\Log\LoggerInterface;
 use Raketa\BackendTestTask\Domain\Cart;
 use Raketa\BackendTestTask\Infrastructure\ConnectorFacade;
+use Ramsey\Uuid\Uuid;
 
 class CartManager extends ConnectorFacade
 {
@@ -47,6 +48,6 @@ class CartManager extends ConnectorFacade
             $this->logger->error('Error');
         }
 
-        return new Cart($clientHash, []);
+        return new Cart(Uuid::uuid4()->toString(), []);
     }
 }
