@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Controller;
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Raketa\BackendTestTask\View\ProductsView;
 
@@ -15,15 +14,12 @@ readonly class ProductController
     ) {
     }
 
-    public function products(RequestInterface $request): ResponseInterface
+    public function products(string $category): ResponseInterface
     {
         $response = new JsonResponse();
-
-        $rawRequest = json_decode($request->getBody()->getContents(), true);
-
         $response->getBody()->write(
             json_encode(
-                $this->productsVew->toArray($rawRequest['category']),
+                $this->productsVew->toArray($category),
                 JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
             )
         );
