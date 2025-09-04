@@ -4,52 +4,40 @@ declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Repository;
 
-use Doctrine\DBAL\Connection;
 use Raketa\BackendTestTask\Entity\Product;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ProductRepository
+class ProductRepository extends ServiceEntityRepository
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(ManagerRegistry $registry)
     {
-        $this->connection = $connection;
+        parent::__construct($registry, Product::class);
     }
 
     public function getByUuid(string $uuid): Product
     {
-        $row = $this->connection->fetchOne(
-            "SELECT * FROM products WHERE uuid = ?", [$uuid]
-        );
+        $product = $this->findOneBy(['uuid' => $uuid, 'isActive' => 1]);
 
-        if (empty($row)) {
-            throw new Exception('Product not found');
+        if (is_null($product)) {
+            throw new NotFoundHttpException('Product not found.');
         }
 
-        return $this->make($row);
+        return $product;
     }
 
     public function getByCategory(string $category): array
     {
-        return array_map(
-            static fn (array $row): Product => $this->make($row),
-            $this->connection->fetchAllAssociative(
-                "SELECT * FROM products WHERE is_active = 1 AND category = ?", [$category]
-            )
-        );
-    }
+        $entityManager = $this->getEntityManager();
 
-    public function make(array $row): Product
-    {
-        return new Product(
-            $row['id'],
-            $row['uuid'],
-            $row['is_active'],
-            $row['category'],
-            $row['name'],
-            $row['description'],
-            $row['thumbnail'],
-            $row['price'],
-        );
+        $query = $entityManager->createQuery(
+            'SELECT p
+            FROM Raketa\BackendTestTask\Entity\Product p
+            WHERE p.isActive = 1
+            AND p.category = :category'
+        )->setParameter('category', $category);
+
+        return $query->getResult();
     }
 }

@@ -15,26 +15,6 @@ class Product
     private string $thumbnail;
     private float $price;
 
-    public function __construct(
-        int $id,
-        string $uuid,
-        bool $isActive,
-        string $category,
-        string $name,
-        string $description,
-        string $thumbnail,
-        float $price,
-    ) {
-        $this->id = $id;
-        $this->uuid = $uuid;
-        $this->isActive = $isActive;
-        $this->category = $category;
-        $this->name = $name;
-        $this->description = $description;
-        $this->thumbnail = $thumbnail;
-        $this->price = $price;
-    }
-
     public function getId(): ?int
     {
         return $this->id;
