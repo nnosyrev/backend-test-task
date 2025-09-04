@@ -19,7 +19,7 @@ class ProductRepository
     public function getByUuid(string $uuid): Product
     {
         $row = $this->connection->fetchOne(
-            "SELECT * FROM products WHERE uuid = " . $uuid,
+            "SELECT * FROM products WHERE uuid = ?", [$uuid]
         );
 
         if (empty($row)) {
@@ -34,7 +34,7 @@ class ProductRepository
         return array_map(
             static fn (array $row): Product => $this->make($row),
             $this->connection->fetchAllAssociative(
-                "SELECT * FROM products WHERE is_active = 1 AND category = " . $category,
+                "SELECT * FROM products WHERE is_active = 1 AND category = ?", [$category]
             )
         );
     }
