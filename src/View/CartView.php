@@ -34,7 +34,7 @@ readonly class CartView
         $data['items'] = [];
         foreach ($cart->getItems() as $item) {
             $total += $item->getPrice() * $item->getQuantity();
-            $product = $this->productRepository->getByUuid($item->getProductUuid());
+            $product = $this->productRepository->findOneByUuidOrFail($item->getProductUuid());
 
             $data['items'][] = [
                 'uuid' => $item->getUuid(),

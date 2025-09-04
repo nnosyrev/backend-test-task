@@ -33,7 +33,7 @@ readonly class CartController
     public function update(RequestInterface $request): JsonResponse
     {
         $rawRequest = json_decode($request->getBody()->getContents(), true);
-        $product = $this->productRepository->getByUuid($rawRequest['productUuid']);
+        $product = $this->productRepository->findOneByUuidOrFail($rawRequest['productUuid']);
 
         $cart = $this->cartManager->getCart();
         $cart->addItem(new CartItem(

@@ -16,7 +16,7 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function getByUuid(string $uuid): Product
+    public function findOneByUuidOrFail(string $uuid): Product
     {
         $product = $this->findOneBy(['uuid' => $uuid, 'isActive' => 1]);
 
@@ -27,7 +27,7 @@ class ProductRepository extends ServiceEntityRepository
         return $product;
     }
 
-    public function getByCategory(string $category): array
+    public function findByCategory(string $category): array
     {
         $entityManager = $this->getEntityManager();
 

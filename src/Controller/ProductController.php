@@ -18,7 +18,7 @@ readonly class ProductController
 
     public function products(string $category): JsonResponse
     {
-        $products = $this->productRepository->getByCategory($category);
+        $products = $this->productRepository->findByCategory($category);
 
         return new JsonResponse($this->productsVew->toArray($products), 200);
     }
