@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-readonly class CartController
+class CartController
 {
     public function __construct(
         private ProductRepository $productRepository,

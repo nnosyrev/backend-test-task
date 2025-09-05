@@ -9,7 +9,7 @@ use Raketa\BackendTestTask\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 
-readonly class ProductController
+class ProductController
 {
     public function __construct(
         private ProductRepository $productRepository,
