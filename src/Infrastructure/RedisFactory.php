@@ -36,7 +36,7 @@ class RedisFactory
 
     private function checkConnection(Redis $redis): void
     {
-        if (!$redis->isConnected() || !$redis->ping()) {
+        if (!$redis->isConnected() || 'pong' !== $redis->ping('pong')) {
             throw new RedisException('Unreachable redis server.');
         }
     }
