@@ -4,7 +4,7 @@ namespace Raketa\BackendTestTask\Controller;
 
 use Raketa\BackendTestTask\Domain\Cart;
 use Raketa\BackendTestTask\Domain\CartItem;
-use Raketa\BackendTestTask\Service\CartManager;
+use Raketa\BackendTestTask\Service\CartStorage\CartStorageInterface;
 use Raketa\BackendTestTask\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -14,14 +14,14 @@ readonly class CartController
 {
     public function __construct(
         private ProductRepository $productRepository,
-        private CartManager $cartManager,
+        private CartStorageInterface $cartStorage,
         private SerializerInterface $serializer
     ) {
     }
 
     public function сart(string $clientHash): JsonResponse
     {
-        $cart = $this->cartManager->getCart($clientHash);
+        $cart = $this->cartStorage->get($clientHash);
 
         if (!$cart) {
             $cart = Cart::createEmpty();
@@ -39,7 +39,7 @@ readonly class CartController
 
         $product = $this->productRepository->findOneByUuidOrFail($productUuid);
 
-        $cart = $this->cartManager->getCart($clientHash);
+        $cart = $this->cartStorage->get($clientHash);
         if (!$cart) {
             $cart = Cart::createEmpty();
         }
@@ -48,7 +48,7 @@ readonly class CartController
             new CartItem($product->getUuid(), $quantity)
         );
 
-        $this->cartManager->saveCart($clientHash, $cart);
+        $this->cartStorage->save($clientHash, $cart);
 
         $json = $this->serializer->serialize($cart, 'json');
 
