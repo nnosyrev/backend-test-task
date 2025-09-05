@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 final class Cart
 {
     public function __construct(
-        readonly private string $uuid,
+        private readonly string $uuid,
         private array $items,
     ) {
     }
@@ -29,8 +29,15 @@ final class Cart
         return $this->items;
     }
 
-    public function addItem(CartItem $item): void
+    public function addItem(CartItem $new): void
     {
-        $this->items[] = $item;
+        foreach ($this->items as &$item) {
+            if ($item->getProductUuid() === $new->getProductUuid()) {
+                $item->addQuantity($new->getQuantity());
+                return;
+            }
+        }
+
+        $this->items[] = $new;
     }
 }

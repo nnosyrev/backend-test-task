@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Domain;
 
-final readonly class CartItem
+final class CartItem
 {
     public function __construct(
-        private string $productUuid,
+        private readonly string $productUuid,
         private int $quantity,
     ) {
     }
@@ -20,5 +20,12 @@ final readonly class CartItem
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    public function addQuantity(int $quantity): static
+    {
+        $this->quantity += $quantity;
+
+        return $this;
     }
 }
