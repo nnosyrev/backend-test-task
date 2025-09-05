@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace Raketa\BackendTestTask\Repository;
 
+use Raketa\BackendTestTask\Entity\Category;
 use Raketa\BackendTestTask\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Raketa\BackendTestTask\Entity\Category;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ProductRepository extends ServiceEntityRepository
@@ -19,7 +19,7 @@ class ProductRepository extends ServiceEntityRepository
 
     public function findOneByUuidOrFail(string $uuid): Product
     {
-        $product = $this->findOneBy(['uuid' => $uuid, 'isActive' => 1]);
+        $product = $this->findOneBy(['uuid' => $uuid, 'isActive' => true]);
 
         if (is_null($product)) {
             throw new NotFoundHttpException('Product not found.');
